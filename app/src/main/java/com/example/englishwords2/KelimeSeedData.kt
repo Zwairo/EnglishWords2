@@ -105,7 +105,7 @@ object KelimeSeedData {
     KelimeEntity("room", "oda"),
     KelimeEntity("rose", "gül"),
     KelimeEntity("salt", "tuz"),
-    KelimeEntity("same", "aynı"),
+    KelimeEntity("same", "aynı / benzer "),
     KelimeEntity("security", "güvenlik"),
     KelimeEntity("sell", "satmak"),
     KelimeEntity("serious", "ciddi"),
@@ -122,7 +122,7 @@ object KelimeSeedData {
     KelimeEntity("smile", "gülümsemek"),
     KelimeEntity("snow", "kar"),
     KelimeEntity("socks", "çorap"),
-    KelimeEntity("son", "erkek kardeş"),
+    KelimeEntity("son", "erkek çocuk"),
     KelimeEntity("song", "şarkı"),
     KelimeEntity("soup", "çorba"),
 

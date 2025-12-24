@@ -2,14 +2,19 @@ package com.example.englishwords2
 
 
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import com.example.englishwords2.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 import android.graphics.Color
+import android.media.SoundPool
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+
 import kotlinx.coroutines.delay
 
 
@@ -17,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var db: AppDatabase
+    private var coinEklendi = false
+
 
     private lateinit var kalanKelimeler: MutableList<KelimeEntity>
     private lateinit var dogruKelime: KelimeEntity
@@ -25,6 +32,14 @@ class MainActivity : AppCompatActivity() {
     private var oyunBitti = false
     private lateinit var prefs: SharedPreferences
     private var highScore = 0
+    private lateinit var soundPool: SoundPool
+    private var soundCorrect = 0
+    private var soundWrong = 0
+    private val defaultButtonTextColor by lazy {
+        binding.btn1.currentTextColor
+    }
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,14 +51,35 @@ class MainActivity : AppCompatActivity() {
         prefs = getSharedPreferences("score_prefs", MODE_PRIVATE)
         highScore = prefs.getInt("high_score", 0)
 
+
+        soundPool = SoundPool.Builder().setMaxStreams(3).build()
+
+        soundCorrect = soundPool.load(this, R.raw.correct, 1)
+        soundWrong = soundPool.load(this, R.raw.wrong, 1)
+
+
         binding.textHighScore.text = "High Score: $highScore"
 
         binding.btnRestart.setOnClickListener {
+            coinEkle()
+            skor = 0
+
+
+            binding.gameOverCard.visibility = View.GONE
+            binding.answersLayout.visibility = View.VISIBLE
+            binding.cardWord.visibility = View.VISIBLE
+
             oyunuBaslat()
         }
+        onBackPressedDispatcher.addCallback(this) {
+            coinEkle()     // 👈 geri tuşunda coin eklenecek
+            finish()       // 👈 activity kapansın
+        }
+
 
         oyunuBaslat()
     }
+
 
     private fun oyunuBaslat() {
         binding.textHighScore.text = "High Score: $highScore"
@@ -51,8 +87,8 @@ class MainActivity : AppCompatActivity() {
         skor = 0
         oyunBitti = false
 
-        binding.textSkor.text = "Skor: $skor"
-        binding.textOyunBitti.visibility = View.GONE
+        binding.textScore.text = "Skor: $skor"
+        binding.txtGameOver.visibility = View.GONE
         binding.btnRestart.visibility = View.GONE
 
         setButonlarEnabled(true)
@@ -63,9 +99,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun yeniSoruYukle() {
         if (oyunBitti) return
-
+        resetAnswerButtons()
         // 🎉 KAZANMA DURUMU
         if (kalanKelimeler.isEmpty()) {
             oyunuKazan()
@@ -83,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             secenekler.addAll(yanlislar)
             secenekler.shuffle()
 
-            binding.textIngilizce.text = dogruKelime.ingilizce
+            binding.textEnglish.text = dogruKelime.ingilizce
 
             val butonlar = listOf(
                 binding.btn1,
@@ -109,8 +146,10 @@ class MainActivity : AppCompatActivity() {
 
         if (secilen == dogruKelime.turkce) {
             skor++
-            binding.textSkor.text = "Skor: $skor"
+            binding.textScore.text = "Skor: $skor"
             button.setBackgroundColor(Color.GREEN)
+            soundPool.play(soundCorrect, 1f, 1f, 1, 0, 1f)
+
 
             // ✅ Doğru bilinen kelimeyi listeden çıkar
             kalanKelimeler.remove(dogruKelime)
@@ -123,6 +162,9 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             button.setBackgroundColor(Color.RED)
+            button.setTextColor(Color.WHITE)
+            soundPool.play(soundWrong, 1f, 1f, 1, 0, 1f)
+
             val butonlar = listOf(
                 binding.btn1,
                 binding.btn2,
@@ -139,27 +181,60 @@ class MainActivity : AppCompatActivity() {
             oyunuBitir()
         }
     }
+    private fun resetAnswerButtons() {
+        val buttons = listOf(binding.btn1, binding.btn2, binding.btn3, binding.btn4)
+
+        buttons.forEach {
+            it.setTextColor(defaultButtonTextColor)
+            it.backgroundTintList = ColorStateList.valueOf(
+                getColor(R.color.textPrimary)
+            )
+            it.isEnabled = true
+        }
+    }
+
 
     private fun oyunuBitir() {
+
+        oyunBitti = true
+        setButonlarEnabled(false)
+
+
+        // Skor kaydı
         if (skor > highScore) {
             highScore = skor
             prefs.edit().putInt("high_score", highScore).apply()
         }
 
-        oyunBitti = true
-        setButonlarEnabled(false)
+        // 2 saniye bekle, sonra game over'a geç
+        lifecycleScope.launch {
 
-        binding.textOyunBitti.text = "Oyun Bitti\nSkorunuz: $skor"
-        binding.textOyunBitti.visibility = View.VISIBLE
-        binding.btnRestart.visibility = View.VISIBLE
+            delay(1500) // 1,5 saniye
+
+            // Önce textleri ayarla
+            binding.txtFinalScore.text = "Skor: $skor"
+
+            // Restart mutlaka görünür olsun
+            binding.btnRestart.visibility = View.VISIBLE
+
+            // Game over kartını göster
+            binding.gameOverCard.visibility = View.VISIBLE
+
+            // Oyun alanını gizle
+            binding.answersLayout.visibility = View.GONE
+            binding.cardWord.visibility = View.GONE
+        }
+
     }
+
+
 
     private fun oyunuKazan() {
         oyunBitti = true
         setButonlarEnabled(false)
 
-        binding.textOyunBitti.text = "🎉 OYUN BİTTİ\nKAZANDINIZ\nSkorunuz: $skor"
-        binding.textOyunBitti.visibility = View.VISIBLE
+        binding.txtGameOver.text = "🎉 OYUN BİTTİ\nKAZANDINIZ\nSkorunuz: $skor"
+        binding.txtGameOver.visibility = View.VISIBLE
         binding.btnRestart.visibility = View.VISIBLE
     }
 
@@ -169,4 +244,21 @@ class MainActivity : AppCompatActivity() {
         binding.btn3.isEnabled = enabled
         binding.btn4.isEnabled = enabled
     }
+
+
+    private fun coinEkle() {
+        if (coinEklendi) return
+        val prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE)
+        val mevcutCoin = prefs.getInt(Constants.KEY_COIN, 0)
+
+        val yeniCoin = mevcutCoin + skor
+
+        Log.d("COIN_TEST", "Eski: $mevcutCoin Yeni: $yeniCoin")
+
+        prefs.edit()
+            .putInt(Constants.KEY_COIN, yeniCoin)
+            .apply()
+    }
+
+
 }

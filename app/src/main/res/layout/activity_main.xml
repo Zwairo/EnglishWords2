@@ -1,81 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootLayout"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor">
 
-    <!-- SKOR -->
+    <!-- 🔹 SKOR KUTUSU -->
+    <LinearLayout
+        android:id="@+id/scoreBox"
+        android:layout_width="120dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_score_box"
+        android:orientation="vertical"
+        android:padding="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/textHighScore"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="Skor: 0"
+            android:textColor="@color/textPrimary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textHighScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="High: 0"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- 🔹 İNGİLİZCE KELİME -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardWord"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="En Yüksek Skor: 0"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:layout_margin="36dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scoreBox">
 
-    <TextView
-        android:id="@+id/textSkor"
-        android:text="Skor: 0"
-        android:textSize="18sp"
-        android:layout_marginBottom="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/textEnglish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:gravity="center"
+            android:padding="24dp"
+            android:text="APPLE"
+            android:textColor="@color/textPrimary"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
 
-    <!-- SORU -->
-    <TextView
-        android:id="@+id/textIngilizce"
-        android:text="WORD"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="24dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <!-- BUTONLAR -->
-    <Button android:id="@+id/btn1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button android:id="@+id/btn2"
-        android:layout_width="match_parent"
+    <!-- 🔹 CEVAP BUTONLARI -->
+    <LinearLayout
+        android:id="@+id/answersLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
 
-    <Button android:id="@+id/btn3"
-        android:layout_width="match_parent"
+        android:layout_marginTop="80dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardWord">
+
+        <!-- BUTON 1 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="6dp">
+
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonBg"
+                android:text="Cevap 1"
+                android:textColor="@color/textPrimary" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- BUTON 2 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="6dp">
+
+            <Button
+                android:id="@+id/btn2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonBg"
+                android:text="Cevap 2"
+                android:textColor="@color/textPrimary" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- BUTON 3 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="6dp">
+
+            <Button
+                android:id="@+id/btn3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonBg"
+                android:text="Cevap 3"
+                android:textColor="@color/textPrimary" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- BUTON 4 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="6dp">
+
+            <Button
+                android:id="@+id/btn4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/buttonBg"
+                android:text="Cevap 4"
+                android:textColor="@color/textPrimary" />
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <!-- GAME OVER CARD -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/gameOverCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
-
-    <Button android:id="@+id/btn4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"/>
-
-    <!-- OYUN BİTTİ -->
-
-    <TextView
-        android:id="@+id/textOyunBitti"
-        android:text="Oyun Bitti\nSkorunuz: 0"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:gravity="center"
         android:visibility="gone"
-        android:layout_marginTop="24dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:padding="24dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/btnRestart"
-        android:text="Yeniden Başlat"
-        android:visibility="gone"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/txtGameOver"
+                android:text="OYUN BİTTİ"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="?android:textColorPrimary"
+                android:layout_marginBottom="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/txtFinalScore"
+                android:text="Skor: 0"
+                android:textSize="18sp"
+                android:textColor="?android:textColorPrimary"
+                android:layout_marginBottom="24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/btnRestart"
+                android:text="YENİDEN BAŞLAT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

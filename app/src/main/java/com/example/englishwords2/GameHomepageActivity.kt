@@ -1,24 +1,121 @@
 package com.example.englishwords2
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.englishwords2.databinding.ActivityGameHomepageBinding
+import androidx.core.content.edit
 
 class GameHomepageActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityGameHomepageBinding
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityGameHomepageBinding.inflate(layoutInflater)
+        binding = ActivityGameHomepageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnOyna.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-        }
+        val gameModes = listOf(
+            GameMode(
+                id = 1,
+                title = "Genel Kelimeler",
+                subtitle = "Sonsuz Mod, Süreli Mod",
+                isLocked = false
+            ),
+            GameMode(
+                id = 2,
+                title = "Country Flags",
+                subtitle = "Bayrak Tahmin",
+                isLocked = !isModeUnlocked(2),
+                unlockCost = 500
+            )
+        )
 
+        binding.recyclerGameModes.layoutManager =
+            GridLayoutManager(this, 2)
+
+        binding.recyclerGameModes.adapter =
+            GameModeAdapter(gameModes) { selectedMode ->
+                handleGameModeClick(selectedMode)
+            }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        coinGuncelle()
+    }
+    private fun coinGuncelle() {
+        val prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE)
+        val coin = prefs.getInt(Constants.KEY_COIN, 0)
+
+        binding.txtCoin.text = "$coin"
+    }
+
+    private fun getCoin(): Int {
+        val prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE)
+        return prefs.getInt(Constants.KEY_COIN, 0)
+    }
+
+    private fun setCoin(value: Int) {
+        val prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE)
+        prefs.edit { putInt(Constants.KEY_COIN, value) }
+    }
+
+    private fun isModeUnlocked(modeId: Int): Boolean {
+        val prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE)
+        return prefs.getBoolean("mode_unlocked_$modeId", false)
+    }
+
+    private fun unlockMode(modeId: Int) {
+        val prefs = getSharedPreferences(Constants.PREF_NAME, MODE_PRIVATE)
+        prefs.edit {
+            putBoolean("mode_unlocked_$modeId", true)
+        }
+    }
+
+
+
+    private fun handleGameModeClick(mode: GameMode) {
+
+        if (!mode.isLocked) {
+            startActivity(Intent(this, MainActivity::class.java))
+            return
+        }
+
+        val coin = getCoin()
+
+        if (coin >= mode.unlockCost) {
+            // coin düş
+            setCoin(coin - mode.unlockCost)
+
+            // kilidi aç
+            unlockMode(mode.id)
+
+            Toast.makeText(
+                this,
+                "${mode.title} açıldı!",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            recreate() // RecyclerView yenilensin
+
+        } else {
+            Toast.makeText(
+                this,
+                "Yetersiz coin (${mode.unlockCost} gerekli)",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
 }
