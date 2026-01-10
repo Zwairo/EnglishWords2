@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [KelimeEntity::class],
-    version = 1,
+    version = 2,   // 🔴 VERSION ARTIRILDI
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -30,6 +30,9 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "kelimeler.db"
                 )
+                    // 🔴 TABLOYU SİL – YENİDEN OLUŞTUR
+                    .fallbackToDestructiveMigration()
+
                     // 🔹 İlk kurulumda seed data eklenir
                     .addCallback(object : RoomDatabase.Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
@@ -38,7 +41,9 @@ abstract class AppDatabase : RoomDatabase() {
                             CoroutineScope(Dispatchers.IO).launch {
                                 getDatabase(context)
                                     .kelimeDao()
-                                    .insertAll(KelimeSeedData.getKelimeler())
+                                    .insertAll(
+                                        KelimeSeedData.getKelimeler()
+                                    )
                             }
                         }
                     })
@@ -50,4 +55,5 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
+
 
