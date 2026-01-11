@@ -16,18 +16,31 @@ interface KelimeDao {
     @Query("SELECT * FROM kelimeler")
     suspend fun getAllKelimeler(): List<KelimeEntity>
 
+    @Query("""
+    SELECT turkce FROM kelimeler 
+    WHERE id != :dogruId 
+    AND tur = :tur
+    ORDER BY RANDOM() 
+    LIMIT 3
+""")
+    suspend fun getYanlisSeceneklerByTur(
+        dogruId: Int,
+        tur: String
+    ): List<String>
+
+
+
+
+    @Query("SELECT * FROM kelimeler WHERE tur = :tur")
+    suspend fun getKelimelerByTur(tur: String): List<KelimeEntity>
+
+
     // 🔹 Rastgele 1 kelime (yedek amaçlı)
     @Query("SELECT * FROM kelimeler ORDER BY RANDOM() LIMIT 1")
     suspend fun getRandomKelime(): KelimeEntity?
 
     // 🔹 Yanlış şıklar (doğru kelime hariç)
-    @Query("""
-        SELECT turkce FROM kelimeler
-        WHERE id != :dogruId
-        ORDER BY RANDOM()
-        LIMIT 3
-    """)
-    suspend fun getYanlisSecenekler(dogruId: Int): List<String>
+
 
     // 🔹 Kontrol amaçlı: tabloda kaç kayıt var?
     @Query("SELECT COUNT(*) FROM kelimeler")

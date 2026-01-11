@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prefs: SharedPreferences
     private var highScore = 0
     private lateinit var soundPool: SoundPool
+    private  lateinit var gameMode: String
     private var soundCorrect = 0
     private var soundWrong = 0
     private val defaultButtonTextColor by lazy {
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        gameMode = intent.getStringExtra("GAME_MODE").toString()
         db = AppDatabase.getDatabase(this)
         prefs = getSharedPreferences("score_prefs", MODE_PRIVATE)
         highScore = prefs.getInt("high_score", 0)
@@ -56,6 +57,8 @@ class MainActivity : AppCompatActivity() {
 
         soundCorrect = soundPool.load(this, R.raw.correct, 1)
         soundWrong = soundPool.load(this, R.raw.wrong, 1)
+
+
 
 
         binding.textHighScore.text = "High Score: $highScore"
@@ -82,7 +85,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun oyunuBaslat() {
-        binding.textHighScore.text = "High Score: $highScore"
 
         skor = 0
         oyunBitti = false
@@ -91,13 +93,26 @@ class MainActivity : AppCompatActivity() {
         binding.txtGameOver.visibility = View.GONE
         binding.btnRestart.visibility = View.GONE
 
-        setButonlarEnabled(true)
+        setButonlarEnabled(false) // 🔴 başta kapalı
 
         lifecycleScope.launch {
-            kalanKelimeler = db.kelimeDao().getAllKelimeler().toMutableList()
+
+            // 🔹 DB dolana kadar bekle
+            var kelimeler = db.kelimeDao().getKelimelerByTur(gameMode)
+
+            while (kelimeler.isEmpty()) {
+                delay(100) // 0.1 saniye
+                kelimeler = db.kelimeDao().getKelimelerByTur(gameMode)
+            }
+
+            // 🔹 Artık DB hazır
+            kalanKelimeler = kelimeler.toMutableList()
+
+            setButonlarEnabled(true)
             yeniSoruYukle()
         }
     }
+
 
 
     private fun yeniSoruYukle() {
@@ -113,7 +128,11 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val yanlislar = db.kelimeDao()
-                .getYanlisSecenekler(dogruKelime.id)
+                .getYanlisSeceneklerByTur(
+                    dogruKelime.id,
+                    dogruKelime.tur
+                )
+
 
             val secenekler = mutableListOf<String>()
             secenekler.add(dogruKelime.turkce)
@@ -193,50 +212,55 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showGameOver(
+        title: String,
+        message: String,
 
-    private fun oyunuBitir() {
-
+    ) {
         oyunBitti = true
         setButonlarEnabled(false)
 
-
-        // Skor kaydı
+        // High score
         if (skor > highScore) {
             highScore = skor
             prefs.edit().putInt("high_score", highScore).apply()
         }
 
-        // 2 saniye bekle, sonra game over'a geç
+        // Coin ekle (her doğru = 1 coin → skor kadar)
+
+
         lifecycleScope.launch {
+            delay(1500)
 
-            delay(1500) // 1,5 saniye
+            binding.txtGameOver.text = title
+            binding.txtFinalScore.text = message
 
-            // Önce textleri ayarla
-            binding.txtFinalScore.text = "Skor: $skor"
-
-            // Restart mutlaka görünür olsun
+            binding.gameOverCard.visibility = View.VISIBLE
             binding.btnRestart.visibility = View.VISIBLE
 
-            // Game over kartını göster
-            binding.gameOverCard.visibility = View.VISIBLE
-
-            // Oyun alanını gizle
             binding.answersLayout.visibility = View.GONE
             binding.cardWord.visibility = View.GONE
         }
-
     }
 
+    private fun oyunuBitir() {
+        showGameOver(
+            title = "❌ OYUN BİTTİ",
+            message = "Skor: $skor",
 
 
+        )
+    }
     private fun oyunuKazan() {
-        oyunBitti = true
-        setButonlarEnabled(false)
+        showGameOver(
+            title = "🎉 KAZANDIN!",
+            message = "Tüm soruları bildin\nSkor: $skor"
 
-        binding.txtGameOver.text = "🎉 OYUN BİTTİ\nKAZANDINIZ\nSkorunuz: $skor"
-        binding.txtGameOver.visibility = View.VISIBLE
-        binding.btnRestart.visibility = View.VISIBLE
+
+        )
     }
+
+
 
     private fun setButonlarEnabled(enabled: Boolean) {
         binding.btn1.isEnabled = enabled
@@ -259,6 +283,7 @@ class MainActivity : AppCompatActivity() {
             .putInt(Constants.KEY_COIN, yeniCoin)
             .apply()
     }
+
 
 
 }

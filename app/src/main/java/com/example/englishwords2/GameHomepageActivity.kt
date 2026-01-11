@@ -1,13 +1,9 @@
 package com.example.englishwords2
 
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.englishwords2.databinding.ActivityGameHomepageBinding
 import androidx.core.content.edit
@@ -27,17 +23,27 @@ class GameHomepageActivity : AppCompatActivity() {
         val gameModes = listOf(
             GameMode(
                 id = 1,
+                tur = "GENEL",
                 title = "Genel Kelimeler",
                 subtitle = "Sonsuz Mod, Süreli Mod",
-                isLocked = false
+                isLocked = false,
             ),
             GameMode(
                 id = 2,
-                title = "Country Flags",
-                subtitle = "Bayrak Tahmin",
+                tur="VERBS",
+                title = "Fiiller (VERBS)",
+                subtitle = "İngilizce Fiil Bilme Oyunu",
                 isLocked = !isModeUnlocked(2),
-                unlockCost = 500
+                unlockCost = 1
+            ),GameMode(
+                id = 3,
+                tur="ADJECTIVES",
+                title = "Sıfatlar (ADJECTIVES)",
+                subtitle = "İngilizce Sıfat Bilme Oyunu",
+                isLocked = !isModeUnlocked(3),
+                unlockCost = 1
             )
+
         )
 
         binding.recyclerGameModes.layoutManager =
@@ -88,7 +94,9 @@ class GameHomepageActivity : AppCompatActivity() {
     private fun handleGameModeClick(mode: GameMode) {
 
         if (!mode.isLocked) {
-            startActivity(Intent(this, MainActivity::class.java))
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("GAME_MODE",mode.tur)
+            startActivity(intent)
             return
         }
 
