@@ -1,5 +1,6 @@
 package com.example.englishwords2
 
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

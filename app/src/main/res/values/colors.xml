@@ -4,8 +4,8 @@
     <color name="cardColor">#FFFFFF</color>
     <color name="buttonBg">#E3F2FD</color>
 
-    <color name="textPrimary">#212121</color>
-    <color name="textSecondary">#555555</color>
+    <color name="textPrimary">#1B1A1A</color>
+    <color name="textSecondary">#615A5A</color>
 
     <color name="correctBg">#4CAF50</color>
     <color name="wrongBg">#F44336</color>

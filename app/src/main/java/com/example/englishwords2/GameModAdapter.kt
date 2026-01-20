@@ -25,8 +25,14 @@ class GameModeAdapter(
         val mode = list[position]
 
         holder.binding.txtTitle.text = mode.title
-        holder.binding.txtSubtitle.text = mode.subtitle
-        holder.binding.imgLock.visibility =
+        holder.binding.txtDesc.text = mode.subtitle
+        holder.binding.txtIcon.text = when (mode.tur) {
+            "GENEL" -> "📘"
+            "VERBS" -> "⚡"
+            "ADJECTIVES" -> "🎯"
+            else -> "🎮"
+        }
+        holder.binding.lockLayout.visibility =
             if (mode.isLocked) View.VISIBLE else View.GONE
 
         holder.itemView.setOnClickListener {

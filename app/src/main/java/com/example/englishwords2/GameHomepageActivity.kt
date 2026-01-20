@@ -2,11 +2,15 @@ package com.example.englishwords2
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.SyncStateContract
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.englishwords2.databinding.ActivityGameHomepageBinding
 import androidx.core.content.edit
+import com.example.englishwords2.Constants
+
+
 
 class GameHomepageActivity : AppCompatActivity() {
 
@@ -25,20 +29,20 @@ class GameHomepageActivity : AppCompatActivity() {
                 id = 1,
                 tur = "GENEL",
                 title = "Genel Kelimeler",
-                subtitle = "Sonsuz Mod, Süreli Mod",
+                subtitle = "Her türden kelimeler ",
                 isLocked = false,
             ),
             GameMode(
                 id = 2,
                 tur="VERBS",
-                title = "Fiiller (VERBS)",
+                title = "Fiiller\n(VERBS)",
                 subtitle = "İngilizce Fiil Bilme Oyunu",
                 isLocked = !isModeUnlocked(2),
                 unlockCost = 1
             ),GameMode(
                 id = 3,
                 tur="ADJECTIVES",
-                title = "Sıfatlar (ADJECTIVES)",
+                title = "Sıfatlar\n(ADJECTIVES)",
                 subtitle = "İngilizce Sıfat Bilme Oyunu",
                 isLocked = !isModeUnlocked(3),
                 unlockCost = 1

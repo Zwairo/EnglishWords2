@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor">
+    android:background="@drawable/header_gradient">
 
     <!-- 🔹 SKOR KUTUSU -->
     <LinearLayout
@@ -13,7 +14,7 @@
         android:layout_height="75dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/bg_score_box"
+        android:background="@drawable/bg_mode_card"
         android:orientation="vertical"
         android:padding="12dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,11 +42,13 @@
 
     <!-- 🔹 İNGİLİZCE KELİME -->
     <androidx.cardview.widget.CardView
+        android:background="@drawable/bg_mode_card"
         android:id="@+id/cardWord"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="36dp"
-        app:cardCornerRadius="16dp"
+
+        app:cardCornerRadius="17dp"
         app:cardElevation="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,11 +57,12 @@
         <TextView
             android:id="@+id/textEnglish"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:background="@drawable/bg_mode_card"
             android:gravity="center"
-            android:padding="24dp"
-            android:text="APPLE"
+            android:padding="20dp"
+            android:text="Ready for Quiz"
             android:textColor="@color/textPrimary"
             android:textSize="26sp"
             android:textStyle="bold" />
@@ -70,7 +74,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="100dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -81,31 +85,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            app:cardCornerRadius="12dp"
+            android:layout_margin="3dp"
+            app:cardCornerRadius="17dp"
             app:cardElevation="6dp">
 
             <Button
                 android:id="@+id/btn1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttonBg"
-                android:text="Cevap 1"
-                android:textColor="@color/textPrimary" />
+                android:layout_margin="3dp"
+                android:textAllCaps="false"
+
+                android:text="Cevap 1" />
         </androidx.cardview.widget.CardView>
+
 
         <!-- BUTON 2 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            app:cardCornerRadius="12dp"
+            android:layout_margin="3dp"
+            app:cardCornerRadius="17dp"
             app:cardElevation="6dp">
 
             <Button
                 android:id="@+id/btn2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttonBg"
+                android:layout_margin="3dp"
+                android:textAllCaps="false"
+
                 android:text="Cevap 2"
                 android:textColor="@color/textPrimary" />
         </androidx.cardview.widget.CardView>
@@ -115,14 +125,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            app:cardCornerRadius="12dp"
+            android:layout_margin="3dp"
+
+            app:cardCornerRadius="17dp"
             app:cardElevation="6dp">
 
             <Button
                 android:id="@+id/btn3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttonBg"
+                android:layout_margin="3dp"
+                android:textAllCaps="false"
+
                 android:text="Cevap 3"
                 android:textColor="@color/textPrimary" />
         </androidx.cardview.widget.CardView>
@@ -132,14 +146,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="17dp"
+            android:layout_margin="3dp"
             app:cardElevation="6dp">
 
             <Button
                 android:id="@+id/btn4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttonBg"
+                android:layout_margin="3dp"
+                android:textAllCaps="false"
+
                 android:text="Cevap 4"
                 android:textColor="@color/textPrimary" />
         </androidx.cardview.widget.CardView>
@@ -178,6 +195,8 @@
 
             <TextView
                 android:id="@+id/txtFinalScore"
+                android:layout_marginTop="17dp"
+                android:gravity="center"
                 android:text="Skor: 0"
                 android:textSize="18sp"
                 android:textColor="?android:textColorPrimary"
@@ -193,5 +212,6 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
