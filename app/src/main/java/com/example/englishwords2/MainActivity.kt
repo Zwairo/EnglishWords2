@@ -2,7 +2,6 @@ package com.example.englishwords2
 
 
 import android.content.SharedPreferences
-import android.content.res.ColorStateList
 import com.example.englishwords2.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 import android.graphics.Color
@@ -36,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private  lateinit var gameMode: String
     private var soundCorrect = 0
     private var soundWrong = 0
+
     private val defaultButtonTextColor by lazy {
         binding.btn1.currentTextColor
     }
@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.textHighScore.text = "High Score: $highScore"
 
+
         binding.btnRestart.setOnClickListener {
             coinEkle()
             skor = 0
@@ -78,7 +79,6 @@ class MainActivity : AppCompatActivity() {
             coinEkle()     // 👈 geri tuşunda coin eklenecek
             finish()       // 👈 activity kapansın
         }
-
 
         oyunuBaslat()
     }
@@ -150,12 +150,13 @@ class MainActivity : AppCompatActivity() {
 
             butonlar.forEachIndexed { index, button ->
                 button.text = secenekler[index]
-                button.setBackgroundColor(Color.LTGRAY)
+                button.setBackgroundResource(R.drawable.bg_mode_card)
                 button.setOnClickListener {
                     cevapKontrol(button, secenekler[index])
                 }
             }
         }
+
     }
 
     private fun cevapKontrol(button: Button, secilen: String) {
@@ -205,11 +206,10 @@ class MainActivity : AppCompatActivity() {
 
         buttons.forEach {
             it.setTextColor(defaultButtonTextColor)
-            it.backgroundTintList = ColorStateList.valueOf(
-                getColor(R.color.textPrimary)
-            )
+            it.setBackgroundResource(R.drawable.bg_mode_card)
             it.isEnabled = true
         }
+
     }
 
     private fun showGameOver(
@@ -217,6 +217,7 @@ class MainActivity : AppCompatActivity() {
         message: String,
 
     ) {
+
         oyunBitti = true
         setButonlarEnabled(false)
 
@@ -246,7 +247,7 @@ class MainActivity : AppCompatActivity() {
     private fun oyunuBitir() {
         showGameOver(
             title = "❌ OYUN BİTTİ",
-            message = "Skor: $skor",
+            message = "❌ OYUN BİTTİ\nSkor: $skor",
 
 
         )
@@ -283,6 +284,12 @@ class MainActivity : AppCompatActivity() {
             .putInt(Constants.KEY_COIN, yeniCoin)
             .apply()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+    }
+
 
 
 
